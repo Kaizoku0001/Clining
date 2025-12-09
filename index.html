@@ -40,825 +40,847 @@
     
     <link rel="canonical" href="https://tazalykservice.kz">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧹</text></svg>">
-    
-    <!-- Preconnect для ускорения загрузки -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://images.unsplash.com">
-    
-    <!-- КРИТИЧЕСКИЙ CSS (ИСПРАВЛЕННЫЙ) -->
-    <style>
-        /* ===== CRITICAL CSS - FIXED ===== */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
-        html { 
-            scroll-behavior: smooth; 
-            scroll-padding-top: 80px; /* Для якорных ссылок */
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: #333;
-            line-height: 1.5;
-            background: white;
-            padding-top: 0; /* ОБЯЗАТЕЛЬНО: убираем padding-top */
-            margin-top: 0; /* ОБЯЗАТЕЛЬНО: убираем margin-top */
-        }
-        
-        /* Убираем все возможные отступы сверху */
-        body::before {
-            display: none !important;
-        }
-        
-        /* Preloader */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-        
-        .preloader-content {
-            text-align: center;
-        }
-        
-        .preloader-icon {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #00bfff;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Header - ФИКСИРОВАННЫЙ И БЕЗ МАРГИНОВ */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            height: 70px;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .navbar {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-weight: bold;
-            color: #1a1a1a;
-        }
-        
-        .logo-circle {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #00bfff, #3fd46b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 800;
-        }
-        
-        /* HERO SECTION - ИСПРАВЛЕНО: НИКАКИХ ОТСТУПОВ СВЕРХУ */
-        .hero {
-            padding-top: 70px; /* Только отступ равный высоте header */
-            padding-bottom: 60px;
-            background: linear-gradient(135deg, rgba(0, 191, 255, 0.05), rgba(63, 212, 107, 0.05));
-            min-height: calc(100vh - 70px); /* Минимальная высота минус header */
-            display: flex;
-            align-items: center;
-            margin-top: 0 !important;
-        }
-        
-        .hero .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-        }
-        
-        .hero-content {
-            max-width: 600px;
-        }
-        
-        .hero-title {
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            margin-bottom: 20px;
-            line-height: 1.2;
-            color: #1a1a1a;
-        }
-        
-        .highlight {
-            color: #00bfff;
-        }
-        
-        .hero-description {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 30px;
-            max-width: 600px;
-        }
-        
-        /* Кнопки */
-        .btn-primary, .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 14px 28px;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 1rem;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #00bfff, #3fd46b);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: #00bfff;
-            border: 2px solid #00bfff;
-        }
-        
-        /* Контейнер */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Мобильное меню */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-        }
-        
-        .menu-toggle span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #1a1a1a;
-            border-radius: 2px;
-        }
-        
-        /* Секция "Как мы работаем" */
-        .process-section {
-            padding: 80px 0;
-            background: #f8f9fa;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .section-title h2 {
-            font-size: clamp(1.8rem, 4vw, 2.2rem);
-            color: #2c3e50;
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .section-title h2:after {
-            content: '';
-            position: absolute;
-            width: 70px;
-            height: 4px;
-            background-color: #00bfff;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-        
-        .section-title p {
-            font-size: 1.1rem;
-            color: #666;
-            max-width: 800px;
-            margin: 20px auto 0;
-        }
-        
-        .process-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-        
-        .process-step {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            position: relative;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .step-number {
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #00bfff, #3fd46b);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
-        }
-        
-        /* Скрываем неиспользуемые элементы до загрузки CSS */
-        .nav-links,
-        .header-actions .btn-contact,
-        .hero-visual,
-        .particles-container,
-        .floating-cards {
-            display: none;
-        }
-        
-        /* Делаем видимыми после загрузки CSS */
-        .styles-loaded .nav-links,
-        .styles-loaded .header-actions .btn-contact,
-        .styles-loaded .hero-visual,
-        .styles-loaded .particles-container,
-        .styles-loaded .floating-cards {
-            display: block;
-        }
-        
-        .styles-loaded .menu-toggle {
-            display: none;
-        }
-        
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .hero {
-                padding-top: 80px; /* Увеличиваем для мобильных */
-                min-height: calc(100vh - 80px);
-                padding-bottom: 40px;
-            }
-            
-            .process-steps {
-                grid-template-columns: 1fr;
-            }
-            
-            .process-step {
-                padding: 25px;
-            }
-            
-            .hero-title {
-                font-size: 1.8rem;
-            }
-            
-            .header {
-                height: 80px;
-            }
-        }
-        
-        /* Убираем все возможные маргины сверху для всех секций */
-        section {
-            margin-top: 0;
-            padding-top: 0;
-        }
-        
-        section:first-of-type {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-    </style>
-    
-    <!-- Загрузка основного CSS асинхронно -->
-    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet';document.documentElement.classList.add('styles-loaded')">
-    <noscript><link rel="stylesheet" href="style.css"></noscript>
-    
-    <!-- Шрифты загружаем асинхронно -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" 
-          as="style" 
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    </noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Preloader -->
-    <div class="preloader" id="preloader">
+    <div class="preloader">
         <div class="preloader-content">
-            <div class="preloader-icon"></div>
+            <div class="preloader-icon">
+                <div class="cleaning-animation">
+                    <div class="broom"></div>
+                    <div class="sparkle"></div>
+                    <div class="sparkle"></div>
+                    <div class="sparkle"></div>
+                </div>
+            </div>
             <p>Загружаем чистоту...</p>
         </div>
     </div>
 
+    <!-- Floating Particles -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <!-- Header -->
     <header class="header">
-        <nav class="navbar">
-            <a href="#" class="logo">
-                <div class="logo-circle">
-                    <span>TZ</span>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <div class="logo-circle">
+                        <span class="logo-main">TZ</span>
+                        <span class="logo-wave"></span>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">Tazalyk</span>
+                        <span class="logo-subtitle">Service</span>
+                    </div>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="#services" class="nav-link"><i class="fas fa-broom"></i> Услуги</a>
+                    <a href="#portfolio" class="nav-link"><i class="fas fa-images"></i> Работы</a>
+                    <a href="#process" class="nav-link"><i class="fas fa-cogs"></i> Процесс</a>
+                    <a href="#pricing" class="nav-link"><i class="fas fa-tag"></i> Цены</a>
+                    <a href="#contact" class="nav-link"><i class="fas fa-phone"></i> Контакты</a>
                 </div>
-                <div>
-                    <div>Tazalyk</div>
-                    <div style="font-size: 0.8rem; color: #666;">Service</div>
+                
+                <div class="header-actions">
+                    <button class="btn-contact" onclick="openWhatsAppModal()">
+                        <i class="fab fa-whatsapp"></i> Заказать
+                    </button>
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
-            </a>
-            
-            <div class="nav-links">
-                <a href="#services" class="nav-link">Услуги</a>
-                <a href="#process" class="nav-link">Как работаем</a>
-                <a href="#portfolio" class="nav-link">Работы</a>
-                <a href="#contact" class="nav-link">Контакты</a>
-            </div>
-            
-            <div class="header-actions">
-                <button class="btn-contact" onclick="APP.openWhatsAppModal()">
-                    Заказать
-                </button>
-                <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </nav>
+            </nav>
+        </div>
     </header>
 
-    <!-- Hero Section (БЕЗ КНОПКИ "РАССЧИТАТЬ СТОИМОСТЬ") -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <div style="background: #00bfff; color: white; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 20px;">
-                    Алматы
-                </div>
+                <div class="hero-badge">Алматы</div>
                 <h1 class="hero-title">Профессиональный клининг для вашего <span class="highlight">комфорта</span></h1>
                 <p class="hero-description">
                     Безупречная чистота квартир, офисов и коммерческих помещений. 
                     Используем экологичные средства и современное оборудование.
                 </p>
                 
-                <!-- КНОПКА УБРАНА ПО ВАШЕМУ ЗАПРОСУ -->
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 40px;">
-                    <button class="btn-primary" onclick="APP.openWhatsAppModal()">
-                        📞 Заказать консультацию
-                    </button>                     
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" data-count="500">0</span>
+                        <span class="stat-label">довольных клиентов</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="1500">0</span>
+                        <span class="stat-label">выполненных заказов</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="98">0</span>
+                        <span class="stat-label">% качество</span>
+                    </div>
+                </div>
+                
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="openCalculator()">
+                        <i class="fas fa-calculator"></i> Рассчитать стоимость
+                    </button>
+                    <button class="btn-secondary" onclick="openWhatsAppModal()">
+                        <i class="fab fa-whatsapp"></i> Бесплатная консультация
+                    </button>
                 </div>
             </div>
             
-            <div class="hero-visual" style="display: none;"></div>
+            <div class="hero-visual">
+                <div class="floating-cards">
+                    <div class="card card-1">
+                        <i class="fas fa-home"></i>
+                        <h3>Квартиры</h3>
+                    </div>
+                    <div class="card card-2">
+                        <i class="fas fa-building"></i>
+                        <h3>Офисы</h3>
+                    </div>
+                    <div class="card card-3">
+                        <i class="fas fa-store"></i>
+                        <h3>Магазины</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <span>Листайте вниз</span>
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="services" style="padding: 80px 0;">
+    <section id="services" class="services">
         <div class="container">
-            <div class="section-title">
-                <h2>Наши услуги</h2>
-                <p>Полный спектр клининговых услуг для дома и бизнеса в Алматы</p>
+            <div class="section-header">
+                <span class="section-subtitle">Наши услуги</span>
+                <h2 class="section-title">Что мы предлагаем</h2>
+                <p class="section-description">
+                    Полный спектр клининговых услуг для дома и бизнеса в Алматы
+                </p>
             </div>
             
-            <div class="process-steps">
+            <div class="services-grid">
                 <!-- Service 1 -->
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <div class="step-icon" style="font-size: 2.5rem; color: #00bfff; margin-bottom: 20px; display: block;">
-                        🏠
+                <div class="service-card" data-service="1">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-roller"></i>
+                        <div class="icon-bg"></div>
                     </div>
-                    <h3 class="step-title">Уборка после ремонта</h3>
-                    <p class="step-description">Тщательное удаление строительной пыли и мусора. Мытье окон и подоконников, очистка сантехники.</p>
-                    <button class="btn-primary" onclick="APP.openWhatsAppModal()" style="width: 100%; margin-top: 15px;">Заказать услугу</button>
+                    <h3>Уборка после ремонта</h3>
+                    <p>Тщательное удаление строительной пыли, мусора и следов ремонтных работ</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Удаление пыли со всех поверхностей</li>
+                        <li><i class="fas fa-check"></i> Мытье окон и подоконников</li>
+                        <li><i class="fas fa-check"></i> Очистка сантехники</li>
+                    </ul>
+                    <button class="service-btn" onclick="openCalculator()">Рассчитать</button>
                 </div>
                 
                 <!-- Service 2 -->
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon" style="font-size: 2.5rem; color: #00bfff; margin-bottom: 20px; display: block;">
-                        🪟
+                <div class="service-card" data-service="2">
+                    <div class="service-icon">
+                        <i class="fas fa-window-maximize"></i>
+                        <div class="icon-bg"></div>
                     </div>
-                    <h3 class="step-title">Мойка окон</h3>
-                    <p class="step-description">Безупречная чистота без разводов. Панорамные и витражные окна, очистка рам и откосов, полировка стекол.</p>
-                    <button class="btn-primary" onclick="APP.openWhatsAppModal()" style="width: 100%; margin-top: 15px;">Заказать услугу</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Как мы работаем Section -->
-    <section id="process" class="process-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Как мы работаем</h2>
-                <p>Профессиональный подход к клинингу в Алматы – от заявки до гарантии качества</p>
-            </div>
-            
-            <div class="process-steps">
-                <!-- Step 1 -->
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <div class="step-icon" style="font-size: 2.5rem; margin-bottom: 20px; display: block;">
-                        📞
-                    </div>
-                    <h3 class="step-title">Заявка</h3>
-                    <p class="step-description">Оставляете заявку по телефону или через наш сайт. Быстрая консультация по услугам уборки в Алматы.</p>
+                    <h3>Мойка окон</h3>
+                    <p>Безупречная чистота без разводов, работаем с окнами любой сложности</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Панорамные и витражные окна</li>
+                        <li><i class="fas fa-check"></i> Очистка рам и откосов</li>
+                        <li><i class="fas fa-check"></i> Полировка стекол</li>
+                    </ul>
+                    <button class="service-btn" onclick="openCalculator()">Рассчитать</button>
                 </div>
                 
-                <!-- Step 2 -->
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon" style="font-size: 2.5rem; margin-bottom: 20px; display: block;">
-                        🤝
+                <!-- Service 3 -->
+                <div class="service-card" data-service="3">
+                    <div class="service-icon">
+                        <i class="fas fa-broom"></i>
+                        <div class="icon-bg"></div>
                     </div>
-                    <h3 class="step-title">Подтверждение</h3>
-                    <p class="step-description">Согласовываем дату и время уборки. Бесплатный выезд оценщика в Алматы для расчета стоимости.</p>
+                    <h3>Генеральная уборка</h3>
+                    <p>Полная глубокая чистка всех поверхностей и труднодоступных мест</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Мытье люстр и светильников</li>
+                        <li><i class="fas fa-check"></i> Чистка гардин и жалюзи</li>
+                        <li><i class="fas fa-check"></i> Дезинфекция поверхностей</li>
+                    </ul>
+                    <button class="service-btn" onclick="openCalculator()">Рассчитать</button>
                 </div>
                 
-                <!-- Step 3 -->
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <div class="step-icon" style="font-size: 2.5rem; margin-bottom: 20px; display: block;">
-                        👥
+                <!-- Service 4 -->
+                <div class="service-card" data-service="4">
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                        <div class="icon-bg"></div>
                     </div>
-                    <h3 class="step-title">Приезд команды</h3>
-                    <p class="step-description">Наша команда приезжает со всем оборудованием и профессиональными средствами для уборки.</p>
+                    <h3>Коммерческая уборка</h3>
+                    <p>Комплексная уборка офисов, магазинов и других коммерческих объектов</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Ежедневная уборка</li>
+                        <li><i class="fas fa-check"></i> Уборка после мероприятий</li>
+                        <li><i class="fas fa-check"></i> Клининг для бизнеса</li>
+                    </ul>
+                    <button class="service-btn" onclick="openCalculator()">Рассчитать</button>
                 </div>
                 
-                <!-- Step 4 -->
-                <div class="process-step">
-                    <div class="step-number">4</div>
-                    <div class="step-icon" style="font-size: 2.5rem; margin-bottom: 20px; display: block;">
-                        🧹
+                <!-- Service 5 -->
+                <div class="service-card" data-service="5">
+                    <div class="service-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="icon-bg"></div>
                     </div>
-                    <h3 class="step-title">Качественная уборка</h3>
-                    <p class="step-description">Проводим уборку по утвержденному чек-листу. Используем профессиональное оборудование для клининга.</p>
+                    <h3>Регулярное обслуживание</h3>
+                    <p>Еженедельная или ежемесячная уборка по выгодной абонентской цене</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Гибкий график</li>
+                        <li><i class="fas fa-check"></i> Специальные цены</li>
+                        <li><i class="fas fa-check"></i> Персональный менеджер</li>
+                    </ul>
+                    <button class="service-btn" onclick="openCalculator()">Рассчитать</button>
                 </div>
                 
-                <!-- Step 5 -->
-                <div class="process-step">
-                    <div class="step-number">5</div>
-                    <div class="step-icon" style="font-size: 2.5rem; margin-bottom: 20px; display: block;">
-                        ✅
+                <!-- Service 6 -->
+                <div class="service-card" data-service="6">
+                    <div class="service-icon">
+                        <i class="fas fa-water"></i>
+                        <div class="icon-bg"></div>
                     </div>
-                    <h3 class="step-title">Контроль качества</h3>
-                    <p class="step-description">Проверяем результат вместе с вами. Гарантируем 100% удовлетворение качеством уборки.</p>
-                </div>
-                
-                <!-- Step 6 -->
-                <div class="process-step">
-                    <div class="step-number">6</div>
-                    <div class="step-icon" style="font-size: 2.5rem; margin-bottom: 20px; display: block;">
-                        🛡️
-                    </div>
-                    <h3 class="step-title">Гарантия</h3>
-                    <p class="step-description">Предоставляем гарантию на все виды работ. Ваша чистота – наша ответственность!</p>
+                    <h3>Мытье фасадов</h3>
+                    <p>Очистка наружных поверхностей зданий от загрязнений</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Высотные работы</li>
+                        <li><i class="fas fa-check"></i> Очистка от пыли и копоти</li>
+                        <li><i class="fas fa-check"></i> Промывка давлением</li>
+                    </ul>
+                    <button class="service-btn" onclick="openCalculator()">Рассчитать</button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Portfolio Section -->
-    <section id="portfolio" style="padding: 80px 0; background: #f8f9fa;">
+    <section id="portfolio" class="portfolio">
         <div class="container">
-            <div class="section-title">
-                <h2>Наши работы</h2>
-                <p>Более 500 успешно выполненных проектов в Алматы</p>
+            <div class="section-header">
+                <span class="section-subtitle">Наши работы</span>
+                <h2 class="section-title">Результаты нашей работы</h2>
+                <p class="section-description">
+                    Более 500 успешно выполненных проектов в Алматы
+                </p>
             </div>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                <div>
-                    <img data-src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60" 
-                         alt="Уборка квартиры" 
-                         loading="lazy"
-                         style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Уборка квартиры" loading="lazy">
+                        <div class="portfolio-overlay">
+                            <h3>Уборка 3-комнатной квартиры</h3>
+                            <p>Полная генеральная уборка с химчисткой мебели</p>
+                            <span class="portfolio-tag">До</span>
+                            <span class="portfolio-tag">После</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <img data-src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60" 
-                         alt="Мытье окон" 
-                         loading="lazy"
-                         style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Мытье окон" loading="lazy">
+                        <div class="portfolio-overlay">
+                            <h3>Мойка панорамных окон</h3>
+                            <p>Бизнес-центр в центре Алматы</p>
+                            <span class="portfolio-tag">Окна</span>
+                            <span class="portfolio-tag">Бизнес</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <img data-src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60" 
-                         alt="Уборка офиса" 
-                         loading="lazy"
-                         style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Уборка офиса" loading="lazy">
+                        <div class="portfolio-overlay">
+                            <h3>Ежедневная уборка офиса</h3>
+                            <p>Комплексное обслуживание бизнес-центра</p>
+                            <span class="portfolio-tag">Офис</span>
+                            <span class="portfolio-tag">Регулярно</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Уборка после ремонта" loading="lazy">
+                        <div class="portfolio-overlay">
+                            <h3>Уборка после ремонта</h3>
+                            <p>Комплексная уборка после капитального ремонта</p>
+                            <span class="portfolio-tag">Ремонт</span>
+                            <span class="portfolio-tag">Глубокая</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="process">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Как мы работаем</span>
+                <h2 class="section-title">Процесс сотрудничества</h2>
+                <p class="section-description">
+                    Простой и понятный процесс от заявки до идеальной чистоты
+                </p>
+            </div>
+            
+            <div class="process-timeline">
+                <div class="timeline-line"></div>
+                
+                <div class="process-step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Заявка</h3>
+                        <p>Оставьте заявку на сайте или по телефону. Наш менеджер свяжется с вами в течение 15 минут.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Консультация</h3>
+                        <p>Бесплатная консультация и выезд оценщика для точного расчета стоимости.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Договор</h3>
+                        <p>Заключаем официальный договор с гарантией качества и фиксированной ценой.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>Уборка</h3>
+                        <p>Наша команда проводит уборку с использованием профессионального оборудования.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">05</div>
+                    <div class="step-content">
+                        <h3>Контроль качества</h3>
+                        <p>Проверяем результат вместе с вами и вносим корректировки при необходимости.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">06</div>
+                    <div class="step-content">
+                        <h3>Оплата</h3>
+                        <p>Оплачиваете услугу после завершения работ. Предоставляем гарантию на все работы.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Цены</span>
+                <h2 class="section-title">Прозрачное ценообразование</h2>
+                <p class="section-description">
+                    Фиксированные цены без скрытых платежей
+                </p>
+            </div>
+            
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Базовый</h3>
+                        <div class="price">
+                            <span class="amount">от 5000 ₸</span>
+                            <span class="period">за квартиру</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Влажная уборка полов</li>
+                        <li><i class="fas fa-check"></i> Мытье кухни и санузла</li>
+                        <li><i class="fas fa-check"></i> Удаление пыли с поверхностей</li>
+                        <li><i class="fas fa-check"></i> Мытье зеркал и стекол</li>
+                        <li class="disabled"><i class="fas fa-times"></i> Мойка окон с двух сторон</li>
+                    </ul>
+                    <button class="btn-primary" onclick="openCalculator()">Выбрать</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Популярно</div>
+                    <div class="pricing-header">
+                        <h3>Стандартный</h3>
+                        <div class="price">
+                            <span class="amount">от 10000 ₸</span>
+                            <span class="period">за квартиру</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Все из пакета Базовый</li>
+                        <li><i class="fas fa-check"></i> Мытье окон с двух сторон</li>
+                        <li><i class="fas fa-check"></i> Чистка бытовой техники</li>
+                        <li><i class="fas fa-check"></i> Уход за растениями</li>
+                        <li><i class="fas fa-check"></i> Дезинфекция поверхностей</li>
+                    </ul>
+                    <button class="btn-primary" onclick="openCalculator()">Выбрать</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Премиум</h3>
+                        <div class="price">
+                            <span class="amount">от 15000 ₸</span>
+                            <span class="period">за квартиру</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Все из пакета Стандартный</li>
+                        <li><i class="fas fa-check"></i> Мойка люстр и светильников</li>
+                        <li><i class="fas fa-check"></i> Чистка гардин и жалюзи</li>
+                        <li><i class="fas fa-check"></i> Ароматизация помещений</li>
+                        <li><i class="fas fa-check"></i> Уборка балкона/лоджии</li>
+                    </ul>
+                    <button class="btn-primary" onclick="openCalculator()">Выбрать</button>
+                </div>
+            </div>
+            
+            <div class="pricing-calculator">
+                <h3>Точный расчет стоимости</h3>
+                <p>Используйте наш калькулятор для индивидуального расчета</p>
+                <button class="btn-secondary" onclick="openCalculator()">
+                    <i class="fas fa-calculator"></i> Открыть калькулятор
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Готовы к безупречной чистоте?</h2>
+                <p>Оставьте заявку и получите бесплатную консультацию от нашего специалиста</p>
+                
+                <div class="cta-buttons">
+                    <button class="btn-primary" onclick="openCalculator()">
+                        <i class="fas fa-calculator"></i> Рассчитать стоимость
+                    </button>
+                    <button class="btn-secondary" onclick="openWhatsAppModal()">
+                        <i class="fab fa-whatsapp"></i> Написать в WhatsApp
+                    </button>
+                </div>
+                
+                <div class="cta-contacts">
+                    <a href="tel:+77474507959" class="contact-link">
+                        <i class="fas fa-phone"></i> +7 747 450 79 59
+                    </a>
+                    <a href="mailto:servicetazalyk@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i> servicetazalyk@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Контакты</span>
+                <h2 class="section-title">Свяжитесь с нами</h2>
+                <p class="section-description">
+                    Мы всегда готовы ответить на ваши вопросы
+                </p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Адрес</h4>
+                            <p>г. Алматы, обслуживаем весь город и область</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Телефоны</h4>
+                            <a href="tel:+77474507959">+7 747 450 79 59</a>
+                            <a href="tel:+77476113590">+7 747 611 35 90</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <a href="mailto:servicetazalyk@gmail.com">servicetazalyk@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-social">
+                        <h4>Мы в социальных сетях</h4>
+                        <div class="social-buttons">
+                            <button class="social-btn instagram" onclick="openInstagramModal()">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </button>
+                            <button class="social-btn whatsapp" onclick="openWhatsAppModal()">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-map">
+                    <h3>Мы находимся в Алматы</h3>
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Обслуживаем все районы города</p>
+                        <a href="https://2gis.kz/almaty" target="_blank" class="map-link">
+                            <i class="fas fa-external-link-alt"></i> Посмотреть на карте
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contact" style="background: #1a1a1a; color: white; padding: 80px 0 20px;">
+    <footer class="footer">
         <div class="container">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-bottom: 50px;">
-                <!-- Контакты -->
-                <div>
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
-                        <div style="background: linear-gradient(135deg, #00bfff, #3fd46b); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">TZ</div>
-                        <div>
-                            <h3 style="color: white; margin-bottom: 5px;">Tazalyk Service</h3>
-                            <p style="opacity: 0.8; font-size: 0.9rem;">Профессиональный клининг в Алматы</p>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <div class="logo-circle">
+                            <span class="logo-main">TZ</span>
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-title">Tazalyk</span>
+                            <span class="logo-subtitle">Service</span>
                         </div>
                     </div>
-                    <p style="opacity: 0.8; margin-bottom: 25px; line-height: 1.7;">
-                        Безупречная чистота для вашего комфорта. Работаем с 2018 года. 
-                        Используем экологичные средства и современное оборудование.
+                    <p class="footer-description">
+                        Профессиональный клининг в Алматы. Безупречная чистота для вашего комфорта.
                     </p>
-                </div>
-                
-                <!-- Контактная информация -->
-                <div>
-                    <h3 style="color: white; margin-bottom: 25px; position: relative; display: inline-block;">
-                        Контакты
-                        <span style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 3px; background: #00bfff;"></span>
-                    </h3>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="background: rgba(255, 255, 255, 0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.2rem;">📞</span>
-                            </div>
-                            <div>
-                                <p style="font-weight: 500; margin-bottom: 2px;">Телефоны</p>
-                                <a href="https://wa.me/77474507959" target="_blank" style="color: #00bfff; text-decoration: none; display: block;">
-                                    +7 (747) 450-79-59 (WhatsApp)
-                                </a>
-                                <a href="https://wa.me/77777777777" target="_blank" style="color: #00bfff; text-decoration: none; display: block; margin-top: 5px;">
-                                    +7 (777) 777-77-77 (WhatsApp)
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="background: rgba(255, 255, 255, 0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.2rem;">📧</span>
-                            </div>
-                            <div>
-                                <p style="font-weight: 500; margin-bottom: 2px;">Email</p>
-                                <a href="mailto:servicetazalyk@gmail.com" style="color: #00bfff; text-decoration: none;">
-                                    servicetazalyk@gmail.com
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="background: rgba(255, 255, 255, 0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.2rem;">📍</span>
-                            </div>
-                            <div>
-                                <p style="font-weight: 500; margin-bottom: 2px;">Мы находимся</p>
-                                <p style="opacity: 0.9;">Алматы, Казахстан</p>
-                                <p style="opacity: 0.7; font-size: 0.9rem; margin-top: 5px;">Работаем по всему городу и области</p>
-                            </div>
-                        </div>
+                    <div class="social-links">
+                        <button class="social-link" onclick="openInstagramModal()">
+                            <i class="fab fa-instagram"></i>
+                        </button>
+                        <button class="social-link" onclick="openWhatsAppModal()">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <a href="mailto:servicetazalyk@gmail.com" class="social-link">
+                            <i class="fas fa-envelope"></i>
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Социальные сети (ИСПРАВЛЕННЫЙ INSTAGRAM) -->
-                <div>
-                    <h3 style="color: white; margin-bottom: 25px; position: relative; display: inline-block;">
-                        Мы в соцсетях
-                        <span style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 3px; background: #00bfff;"></span>
-                    </h3>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        <!-- ИСПРАВЛЕННАЯ ССЫЛКА НА INSTAGRAM -->
-                        <a href="https://www.instagram.com/tazalyk_service82?igsh=MWtvMnY0Zm5qd2czaA%3D%3D&utm_source=qr" target="_blank" 
-                           style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.05); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: white; transition: all 0.3s ease;">
-                            <div style="background: linear-gradient(45deg, #833AB4, #E1306C, #F77737); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.2rem;">📸</span>
-                            </div>
-                            <div>
-                                <p style="font-weight: 500; margin-bottom: 2px;">Instagram</p>
-                                <p style="opacity: 0.8; font-size: 0.9rem;">@tazalyk_service82</p>
-                            </div>
-                        </a>
-                        
-                        <a href="https://wa.me/77474507959" target="_blank" 
-                           style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.05); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: white; transition: all 0.3s ease;">
-                            <div style="background: linear-gradient(135deg, #25D366, #128C7E); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.2rem;">💬</span>
-                            </div>
-                            <div>
-                                <p style="font-weight: 500; margin-bottom: 2px;">WhatsApp 1</p>
-                                <p style="opacity: 0.8; font-size: 0.9rem;">+7 747 450 79 59</p>
-                            </div>
-                        </a>
-                        
-                        <a href="https://wa.me/77777777777" target="_blank" 
-                           style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.05); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: white; transition: all 0.3s ease;">
-                            <div style="background: linear-gradient(135deg, #25D366, #128C7E); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.2rem;">💬</span>
-                            </div>
-                            <div>
-                                <p style="font-weight: 500; margin-bottom: 2px;">WhatsApp 2</p>
-                                <p style="opacity: 0.8; font-size: 0.9rem;">+7 777 777 77 77</p>
-                            </div>
-                        </a>
+                <div class="footer-col">
+                    <h4>Услуги</h4>
+                    <ul class="footer-links">
+                        <li><a href="#services">Уборка после ремонта</a></li>
+                        <li><a href="#services">Мойка окон</a></li>
+                        <li><a href="#services">Генеральная уборка</a></li>
+                        <li><a href="#services">Коммерческая уборка</a></li>
+                        <li><a href="#services">Регулярное обслуживание</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Компания</h4>
+                    <ul class="footer-links">
+                        <li><a href="#process">Как мы работаем</a></li>
+                        <li><a href="#portfolio">Наши работы</a></li>
+                        <li><a href="#pricing">Цены</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Контакты</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> <a href="tel:+77474507959">+7 747 450 79 59</a></p>
+                        <p><i class="fas fa-phone"></i> <a href="tel:+77476113590">+7 747 611 35 90</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:servicetazalyk@gmail.com">servicetazalyk@gmail.com</a></p>
+                        <p><i class="fas fa-map-marker-alt"></i> г. Алматы</p>
                     </div>
                 </div>
             </div>
             
-            <!-- Карта -->
-            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; margin-bottom: 40px;">
-                <h3 style="color: white; margin-bottom: 20px; text-align: center;">Наше местоположение</h3>
-                <div style="width: 100%; height: 300px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                    <div style="text-align: center; padding: 20px;">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">📍</div>
-                        <h4 style="color: white; margin-bottom: 10px;">Алматы, Казахстан</h4>
-                        <p style="opacity: 0.8; max-width: 400px; margin: 0 auto;">
-                            Мы предоставляем услуги по всему городу. Свяжитесь с нами для уточнения адреса выезда.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Копирайт -->
-            <div style="text-align: center; padding-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <p style="opacity: 0.6; font-size: 0.9rem; margin-bottom: 5px;">
-                    © 2024 Tazalyk Service. Все права защищены.
-                </p>
-                <p style="opacity: 0.5; font-size: 0.8rem;">
-                    Профессиональный клининг в Алматы | Уборка квартир, офисов, после ремонта
-                </p>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Tazalyk Service. Все права защищены.</p>
+                <p>Профессиональная уборка в Алматы</p>
             </div>
         </div>
     </footer>
 
-    <!-- Кнопка "Наверх" -->
-    <button id="scrollTop" style="display: none; position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #00bfff, #3fd46b); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 999; box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3); font-size: 1.2rem;">↑</button>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-logo">
+                <div class="logo-circle">
+                    <span class="logo-main">TZ</span>
+                </div>
+                <span>Tazalyk Service</span>
+            </div>
+            <button class="menu-close" id="menuClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="#services" class="mobile-menu-link"><i class="fas fa-broom"></i> Услуги</a>
+            <a href="#portfolio" class="mobile-menu-link"><i class="fas fa-images"></i> Работы</a>
+            <a href="#process" class="mobile-menu-link"><i class="fas fa-cogs"></i> Процесс</a>
+            <a href="#pricing" class="mobile-menu-link"><i class="fas fa-tag"></i> Цены</a>
+            <a href="#contact" class="mobile-menu-link"><i class="fas fa-phone"></i> Контакты</a>
+            <button class="btn-primary mobile-order-btn" onclick="openWhatsAppModal()">
+                <i class="fab fa-whatsapp"></i> Заказать уборку
+            </button>
+        </div>
+    </div>
 
-    <!-- Критичный JavaScript -->
-    <script>
-        // Глобальный объект приложения
-        window.APP = {
-            // Скрыть preloader
-            hidePreloader: function() {
-                setTimeout(function() {
-                    var preloader = document.getElementById('preloader');
-                    if (preloader) {
-                        preloader.style.opacity = '0';
-                        setTimeout(function() {
-                            preloader.style.display = 'none';
-                        }, 300);
-                    }
-                }, 500);
-            },
+    <!-- Modals -->
+    <!-- Calculator Modal -->
+    <div class="modal" id="calculatorModal">
+        <div class="modal-content calculator-modal">
+            <button class="modal-close" id="closeCalculator">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3><i class="fas fa-calculator"></i> Калькулятор стоимости</h3>
+                <p>Рассчитайте точную стоимость уборки</p>
+            </div>
             
-            // Открыть WhatsApp
-            openWhatsAppModal: function() {
-                var message = encodeURIComponent('Здравствуйте! Хочу получить консультацию по уборке.');
-                window.open('https://wa.me/77474507959?text=' + message, '_blank');
-            },
-            
-            // Открыть Instagram (ИСПРАВЛЕННАЯ ССЫЛКА)
-            openInstagram: function() {
-                window.open('https://www.instagram.com/tazalyk_service82?igsh=MWtvMnY0Zm5qd2czaA%3D%3D&utm_source=qr', '_blank');
-            },
-            
-            // Открыть WhatsApp 2
-            openWhatsApp2: function() {
-                var message = encodeURIComponent('Здравствуйте! Хочу получить консультацию по уборке.');
-                window.open('https://wa.me/77777777777?text=' + message, '_blank');
-            }
-        };
-
-        // Инициализация при загрузке DOM
-        document.addEventListener('DOMContentLoaded', function() {
-            // 1. Скрыть preloader
-            APP.hidePreloader();
-            
-            // 2. Плавная прокрутка
-            document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    var targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        var headerHeight = document.querySelector('.header').offsetHeight;
-                        var targetPosition = targetElement.offsetTop - headerHeight;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-            
-            // 3. Кнопка "Наверх"
-            var scrollTopBtn = document.getElementById('scrollTop');
-            if (scrollTopBtn) {
-                scrollTopBtn.addEventListener('click', function() {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                });
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="roomType">Тип помещения</label>
+                    <select id="roomType">
+                        <option value="apartment">Квартира</option>
+                        <option value="house">Дом</option>
+                        <option value="office">Офис</option>
+                        <option value="commercial">Коммерческое помещение</option>
+                    </select>
+                </div>
                 
-                window.addEventListener('scroll', function() {
-                    if (window.scrollY > 300) {
-                        scrollTopBtn.style.display = 'block';
-                        setTimeout(function() {
-                            scrollTopBtn.style.opacity = '1';
-                        }, 10);
-                    } else {
-                        scrollTopBtn.style.opacity = '0';
-                        setTimeout(function() {
-                            scrollTopBtn.style.display = 'none';
-                        }, 300);
-                    }
-                });
-            }
-            
-            // 4. Анимация для шагов процесса
-            var processSteps = document.querySelectorAll('.process-step');
-            processSteps.forEach(function(step, index) {
-                step.style.opacity = '0';
-                step.style.transform = 'translateY(20px)';
-                step.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="area">Площадь (м²)</label>
+                        <input type="number" id="area" min="10" max="500" value="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="rooms">Количество комнат</label>
+                        <input type="number" id="rooms" min="1" max="10" value="2">
+                    </div>
+                </div>
                 
-                setTimeout(function() {
-                    step.style.opacity = '1';
-                    step.style.transform = 'translateY(0)';
-                }, 100 * index);
-            });
-            
-            // 5. Инициализация кнопок
-            document.querySelectorAll('.btn-primary, .btn-secondary').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(function() {
-                        btn.style.transform = '';
-                    }, 150);
-                });
-            });
-        });
-    </script>
+                <div class="form-group">
+                    <label>Дополнительные услуги</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="windows" checked>
+                            <span>Мойка окон</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="balcony">
+                            <span>Уборка балкона</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="chandelier">
+                            <span>Мытье люстр</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="disinfection">
+                            <span>Дезинфекция</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="calculator-result">
+                    <div class="result-header">
+                        <h4>Итоговая стоимость:</h4>
+                        <div class="total-price" id="totalPrice">15 000 ₸</div>
+                    </div>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span>Базовая уборка:</span>
+                            <span>10 000 ₸</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Дополнительные услуги:</span>
+                            <span>5 000 ₸</span>
+                        </div>
+                        <div class="detail-item total">
+                            <span>Итого:</span>
+                            <span>15 000 ₸</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="sendCalculation()">
+                        <i class="fas fa-paper-plane"></i> Отправить расчет
+                    </button>
+                    <button class="btn-secondary" onclick="closeCalculator()">
+                        <i class="fas fa-times"></i> Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Основной JavaScript -->
-    <script src="script.js" defer></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-          media="print" 
-          onload="this.media='all'; this.onload=null;">
+    <!-- WhatsApp Modal -->
+    <div class="modal" id="whatsappModal">
+        <div class="modal-content whatsapp-modal">
+            <button class="modal-close" id="closeWhatsApp">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <div class="whatsapp-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>Напишите нам в WhatsApp</h3>
+                <p>Выберите удобный номер для связи</p>
+            </div>
+            
+            <div class="whatsapp-options">
+                <a href="https://wa.me/77474507959" class="whatsapp-option" target="_blank" onclick="closeWhatsAppModal()">
+                    <div class="option-content">
+                        <div class="option-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="option-info">
+                            <h4>Менеджер Жанна</h4>
+                            <p>+7 747 450 79 59</p>
+                            <span class="option-status">Онлайн</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                
+                <a href="https://wa.me/77476113590" class="whatsapp-option" target="_blank" onclick="closeWhatsAppModal()">
+                    <div class="option-content">
+                        <div class="option-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="option-info">
+                            <h4>Менеджер Айнаш</h4>
+                            <p>+7 747 611 35 90</p>
+                            <span class="option-status">Онлайн</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="modal-note">
+                <i class="fas fa-info-circle"></i>
+                <p>Ответим в течение 5 минут в рабочее время (8:00-22:00)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instagram Modal -->
+    <div class="modal" id="instagramModal">
+        <div class="modal-content instagram-modal">
+            <button class="modal-close" id="closeInstagram">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <div class="instagram-icon">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                <h3>Наши Instagram аккаунты</h3>
+                <p>Смотрите наши работы и новости</p>
+            </div>
+            
+            <div class="instagram-options">
+                <a href="https://www.instagram.com/3152zhanna?utm_source=qr&igsh=dWFxaG83anR1bzV6" class="instagram-option" target="_blank" onclick="closeInstagramModal()">
+                    <div class="option-content">
+                        <div class="option-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="option-info">
+                            <h4>@3152zhanna</h4>
+                            <p>Менеджер по клинингу</p>
+                            <span class="option-followers">Аккаунт Жанны</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+                
+                <a href="https://www.instagram.com/ainash_khanatovna?igsh=dnc5OTlrMzR0cng5&utm_source=ig_contact_invite" class="instagram-option" target="_blank" onclick="closeInstagramModal()">
+                    <div class="option-content">
+                        <div class="option-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="option-info">
+                            <h4>@ainash_khanatovna</h4>
+                            <p>Директор компании</p>
+                            <span class="option-followers">Аккаунт Айнаш</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="script.js"></script>
 </body>
 </html>
