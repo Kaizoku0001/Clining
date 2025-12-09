@@ -1,4 +1,4 @@
-// ===== DOM ELEMENTS =====
+// ===== MOBILE-OPTIMIZED JS =====
 const DOM = {
     preloader: document.querySelector('.preloader'),
     header: document.querySelector('.header'),
@@ -18,8 +18,8 @@ const DOM = {
     totalPrice: document.getElementById('totalPrice')
 };
 
-// ===== GLOBAL STATE =====
-let isModalOpen = false;
+// ===== TOUCH OPTIMIZATIONS =====
+document.addEventListener('touchstart', function() {}, {passive: true});
 
 // ===== PRELOADER =====
 window.addEventListener('load', () => {
@@ -27,62 +27,124 @@ window.addEventListener('load', () => {
         DOM.preloader.classList.add('loaded');
         setTimeout(() => {
             DOM.preloader.style.display = 'none';
-        }, 500);
-    }, 1500);
-});
-
-// ===== HEADER SCROLL EFFECT =====
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
-        DOM.header.classList.add('scrolled');
-        DOM.scrollTop.classList.add('visible');
-    } else {
-        DOM.header.classList.remove('scrolled');
-        DOM.scrollTop.classList.remove('visible');
-    }
+        }, 300);
+    }, 1000);
 });
 
 // ===== MOBILE MENU =====
-DOM.menuToggle?.addEventListener('click', () => {
-    DOM.mobileMenu.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    isModalOpen = true;
-});
-
-DOM.menuClose?.addEventListener('click', () => {
-    DOM.mobileMenu.classList.remove('active');
-    document.body.style.overflow = '';
-    isModalOpen = false;
-});
-
-// Close mobile menu when clicking on links
-document.querySelectorAll('.mobile-menu-link').forEach(link => {
-    link.addEventListener('click', () => {
+function toggleMobileMenu() {
+    const isActive = DOM.mobileMenu.classList.contains('active');
+    
+    if (isActive) {
         DOM.mobileMenu.classList.remove('active');
         document.body.style.overflow = '';
-        isModalOpen = false;
+        DOM.menuToggle?.classList.remove('active');
+    } else {
+        DOM.mobileMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        DOM.menuToggle?.classList.add('active');
+        
+        // Закрываем другие открытые модалки
+        closeAllModals();
+    }
+}
+
+// Инициализация меню
+if (DOM.menuToggle) {
+    DOM.menuToggle.addEventListener('click', toggleMobileMenu);
+}
+
+if (DOM.menuClose) {
+    DOM.menuClose.addEventListener('click', toggleMobileMenu);
+}
+
+// Закрытие меню при клике на ссылку
+document.querySelectorAll('.mobile-menu-link').forEach(link => {
+    link.addEventListener('click', () => {
+        toggleMobileMenu();
+        
+        // Плавный скролл к секции
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            setTimeout(() => {
+                const target = document.querySelector(href);
+                if (target) {
+                    const headerHeight = DOM.header?.offsetHeight || 60;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 300);
+        }
     });
 });
 
-// ===== MODAL FUNCTIONS =====
+// ===== HEADER SCROLL EFFECT (OPTIMIZED) =====
+let lastScroll = 0;
+let ticking = false;
+
+function updateHeader() {
+    const currentScroll = window.scrollY;
+    
+    if (currentScroll > 100) {
+        DOM.header.classList.add('scrolled');
+        DOM.scrollTop?.classList.add('visible');
+    } else {
+        DOM.header.classList.remove('scrolled');
+        DOM.scrollTop?.classList.remove('visible');
+    }
+    
+    // Скрываем меню при скролле
+    if (Math.abs(currentScroll - lastScroll) > 50) {
+        DOM.mobileMenu?.classList.remove('active');
+        DOM.menuToggle?.classList.remove('active');
+        document.body.style.overflow = '';
+        lastScroll = currentScroll;
+    }
+}
+
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            updateHeader();
+            ticking = false;
+        });
+        ticking = true;
+    }
+}, {passive: true});
+
+// ===== MODAL MANAGEMENT =====
+let activeModal = null;
+
 function openModal(modal) {
-    if (isModalOpen) return;
+    if (activeModal) {
+        closeModal(activeModal);
+    }
     
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    isModalOpen = true;
+    activeModal = modal;
     
-    // Add entrance animation
-    modal.style.animation = 'modalFadeIn 0.3s ease';
+    // Добавляем класс для предотвращения скролла
+    document.body.classList.add('modal-open');
 }
 
 function closeModal(modal) {
     modal.classList.remove('active');
     document.body.style.overflow = '';
-    isModalOpen = false;
+    document.body.classList.remove('modal-open');
+    activeModal = null;
 }
 
-// Calculator Modal
+function closeAllModals() {
+    document.querySelectorAll('.modal.active').forEach(modal => {
+        closeModal(modal);
+    });
+}
+
+// Модальные окна
 function openCalculator() {
     openModal(DOM.calculatorModal);
     updateCalculator();
@@ -92,7 +154,6 @@ function closeCalculator() {
     closeModal(DOM.calculatorModal);
 }
 
-// WhatsApp Modal
 function openWhatsAppModal() {
     openModal(DOM.whatsappModal);
 }
@@ -101,7 +162,6 @@ function closeWhatsAppModal() {
     closeModal(DOM.whatsappModal);
 }
 
-// Instagram Modal
 function openInstagramModal() {
     openModal(DOM.instagramModal);
 }
@@ -110,7 +170,7 @@ function closeInstagramModal() {
     closeModal(DOM.instagramModal);
 }
 
-// Close modals when clicking outside
+// Закрытие по клику вне модалки
 document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
@@ -119,33 +179,19 @@ document.querySelectorAll('.modal').forEach(modal => {
     });
 });
 
-// Close modals with Escape key
+// Закрытие по Escape
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isModalOpen) {
-        document.querySelectorAll('.modal.active').forEach(modal => {
-            closeModal(modal);
-        });
+    if (e.key === 'Escape' && activeModal) {
+        closeModal(activeModal);
     }
 });
 
-// ===== CALCULATOR LOGIC =====
+// ===== CALCULATOR (TOUCH OPTIMIZED) =====
 const PRICES = {
-    apartment: {
-        base: 500,
-        perRoom: 1000
-    },
-    house: {
-        base: 800,
-        perRoom: 1200
-    },
-    office: {
-        base: 700,
-        perRoom: 1500
-    },
-    commercial: {
-        base: 1000,
-        perRoom: 2000
-    }
+    apartment: { base: 500, perRoom: 1000 },
+    house: { base: 800, perRoom: 1200 },
+    office: { base: 700, perRoom: 1500 },
+    commercial: { base: 1000, perRoom: 2000 }
 };
 
 const ADDITIONAL_SERVICES = {
@@ -156,27 +202,29 @@ const ADDITIONAL_SERVICES = {
 };
 
 function updateCalculator() {
+    if (!DOM.roomTypeSelect || !DOM.areaInput || !DOM.roomsInput) return;
+    
     const roomType = DOM.roomTypeSelect.value;
     const area = parseInt(DOM.areaInput.value) || 50;
     const rooms = parseInt(DOM.roomsInput.value) || 2;
     
-    // Get base price
+    // Расчет
     const basePrice = PRICES[roomType].base * (area / 50);
     const roomsPrice = PRICES[roomType].perRoom * rooms;
     
-    // Calculate additional services
     let additionalPrice = 0;
     document.querySelectorAll('input[name]:checked').forEach(checkbox => {
         additionalPrice += ADDITIONAL_SERVICES[checkbox.name];
     });
     
-    // Calculate total
     const total = Math.round(basePrice + roomsPrice + additionalPrice);
     
-    // Update display
-    DOM.totalPrice.textContent = total.toLocaleString('ru-RU') + ' ₸';
+    // Обновление интерфейса
+    if (DOM.totalPrice) {
+        DOM.totalPrice.textContent = total.toLocaleString('ru-RU') + ' ₸';
+    }
     
-    // Update details
+    // Обновление деталей
     updateResultDetails(basePrice, additionalPrice, total);
 }
 
@@ -200,123 +248,98 @@ function updateResultDetails(base, additional, total) {
     }
 }
 
-// Initialize calculator events
-DOM.areaInput?.addEventListener('input', updateCalculator);
-DOM.roomsInput?.addEventListener('input', updateCalculator);
-DOM.roomTypeSelect?.addEventListener('change', updateCalculator);
+// Инициализация калькулятора
+if (DOM.areaInput && DOM.roomsInput && DOM.roomTypeSelect) {
+    // Добавляем слушатели с учетом touch
+    ['input', 'change'].forEach(event => {
+        DOM.areaInput.addEventListener(event, updateCalculator, {passive: true});
+        DOM.roomsInput.addEventListener(event, updateCalculator, {passive: true});
+        DOM.roomTypeSelect.addEventListener(event, updateCalculator, {passive: true});
+    });
+    
+    document.querySelectorAll('input[name]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateCalculator, {passive: true});
+    });
+}
 
-document.querySelectorAll('input[name]').forEach(checkbox => {
-    checkbox.addEventListener('change', updateCalculator);
-});
-
-// Send calculation via WhatsApp
+// ===== WHATSAPP INTEGRATION =====
 function sendCalculation() {
+    if (!DOM.roomTypeSelect || !DOM.areaInput || !DOM.roomsInput) return;
+    
     const roomType = DOM.roomTypeSelect.options[DOM.roomTypeSelect.selectedIndex].text;
     const area = DOM.areaInput.value;
     const rooms = DOM.roomsInput.value;
-    const total = DOM.totalPrice.textContent;
+    const total = DOM.totalPrice?.textContent || '0 ₸';
     
     let additionalServices = [];
     document.querySelectorAll('input[name]:checked').forEach(checkbox => {
-        additionalServices.push(checkbox.nextElementSibling.textContent.trim());
+        additionalServices.push(checkbox.nextElementSibling?.textContent?.trim() || '');
     });
     
-    const message = `📋 *Расчет стоимости уборки*
+    const message = `📋 *Расчет стоимости уборки*%0A%0A🏠 Тип помещения: ${roomType}%0A📏 Площадь: ${area} м²%0A🚪 Комнат: ${rooms}%0A💰 Итоговая стоимость: ${total}%0A%0A✨ Дополнительные услуги:%0A${additionalServices.length > 0 ? additionalServices.map(s => `• ${s}`).join('%0A') : 'Не выбраны'}%0A%0A💬 *Хочу заказать эту услугу!*`;
     
-🏠 Тип помещения: ${roomType}
-📏 Площадь: ${area} м²
-🚪 Комнат: ${rooms}
-💰 Итоговая стоимость: ${total}
-
-✨ Дополнительные услуги:
-${additionalServices.length > 0 ? additionalServices.map(s => `• ${s}`).join('\n') : 'Не выбраны'}
-
-💬 *Хочу заказать эту услугу!*`;
-    
-    const encodedMessage = encodeURIComponent(message);
     const phone = '77474507959';
-    const url = `https://wa.me/${phone}?text=${encodedMessage}`;
+    const url = `https://wa.me/${phone}?text=${message}`;
     
     window.open(url, '_blank');
     closeCalculator();
 }
 
-// ===== ANIMATED COUNTERS =====
+// ===== ANIMATED COUNTERS (OPTIMIZED) =====
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
-    
-    counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-count'));
-        const increment = target / 200;
-        let current = 0;
-        
-        const updateCounter = () => {
-            if (current < target) {
-                current += increment;
-                counter.textContent = Math.ceil(current).toLocaleString('ru-RU');
-                setTimeout(updateCounter, 10);
-            } else {
-                counter.textContent = target.toLocaleString('ru-RU') + (counter.getAttribute('data-count') === '98' ? '%' : '+');
-            }
-        };
-        
-        updateCounter();
-    });
-}
-
-// ===== SCROLL ANIMATIONS =====
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animated');
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-count'));
+                const increment = target / 100;
+                let current = 0;
                 
-                // Animate counters when hero section is visible
-                if (entry.target.classList.contains('hero')) {
-                    animateCounters();
-                }
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.textContent = Math.ceil(current).toLocaleString('ru-RU');
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target.toLocaleString('ru-RU') + 
+                            (counter.getAttribute('data-count') === '98' ? '%' : '+');
+                    }
+                };
+                
+                updateCounter();
+                observer.unobserve(counter);
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.5 });
     
-    // Observe sections
-    document.querySelectorAll('section').forEach(section => {
-        observer.observe(section);
-    });
-    
-    // Observe service cards
-    document.querySelectorAll('.service-card').forEach(card => {
-        observer.observe(card);
-    });
+    counters.forEach(counter => observer.observe(counter));
 }
 
 // ===== SMOOTH SCROLLING =====
 function initSmoothScrolling() {
+    // Внутренние ссылки
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            
+            const target = document.querySelector(href);
+            if (!target) return;
+            
             e.preventDefault();
             
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (!targetElement) return;
-            
-            // Close mobile menu if open
-            if (DOM.mobileMenu.classList.contains('active')) {
-                DOM.mobileMenu.classList.remove('active');
-                document.body.style.overflow = '';
-                isModalOpen = false;
+            // Закрываем меню если открыто
+            if (DOM.mobileMenu?.classList.contains('active')) {
+                toggleMobileMenu();
             }
             
-            // Scroll to target
-            const headerHeight = DOM.header.offsetHeight;
-            const targetPosition = targetElement.offsetTop - headerHeight - 20;
+            // Закрываем модалки
+            closeAllModals();
+            
+            // Скролл
+            const headerHeight = DOM.header?.offsetHeight || 60;
+            const targetPosition = target.offsetTop - headerHeight;
             
             window.scrollTo({
                 top: targetPosition,
@@ -325,7 +348,7 @@ function initSmoothScrolling() {
         });
     });
     
-    // Scroll to top button
+    // Кнопка "Наверх"
     DOM.scrollTop?.addEventListener('click', () => {
         window.scrollTo({
             top: 0,
@@ -334,160 +357,63 @@ function initSmoothScrolling() {
     });
 }
 
-// ===== PARTICLE ANIMATION =====
-function enhanceParticles() {
-    const particles = document.querySelectorAll('.particle');
+// ===== ORIENTATION CHANGE HANDLER =====
+function handleOrientationChange() {
+    // Пересчитываем высоту viewport
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
     
-    particles.forEach((particle, index) => {
-        // Randomize animation
-        const duration = 15 + Math.random() * 10;
-        const delay = Math.random() * 5;
-        
-        particle.style.animationDuration = `${duration}s`;
-        particle.style.animationDelay = `${delay}s`;
-        
-        // Add mouse interaction
-        particle.addEventListener('mouseenter', () => {
-            particle.style.transform = 'scale(1.5)';
-            particle.style.opacity = '0.3';
-        });
-        
-        particle.addEventListener('mouseleave', () => {
-            particle.style.transform = '';
-            particle.style.opacity = '';
-        });
-    });
-}
-
-// ===== SERVICE CARDS INTERACTION =====
-function enhanceServiceCards() {
-    const serviceCards = document.querySelectorAll('.service-card');
+    // Закрываем меню при повороте
+    if (DOM.mobileMenu?.classList.contains('active')) {
+        toggleMobileMenu();
+    }
     
-    serviceCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            const icon = card.querySelector('.service-icon i');
-            if (icon) {
-                icon.style.transform = 'scale(1.2) rotate(10deg)';
-                icon.style.transition = 'transform 0.3s ease';
-            }
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            const icon = card.querySelector('.service-icon i');
-            if (icon) {
-                icon.style.transform = '';
-            }
-        });
-        
-        // Click effect
-        card.addEventListener('click', (e) => {
-            if (e.target.classList.contains('service-btn')) return;
-            
-            card.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                card.style.transform = '';
-            }, 200);
-        });
-    });
+    // Пересчитываем модальные окна
+    if (activeModal) {
+        setTimeout(() => {
+            activeModal.scrollTop = 0;
+        }, 300);
+    }
 }
 
-// ===== FORM INPUT ANIMATIONS =====
-function enhanceFormInputs() {
-    const inputs = document.querySelectorAll('input, select');
-    
-    inputs.forEach(input => {
-        // Focus effect
-        input.addEventListener('focus', () => {
-            input.parentElement.classList.add('focused');
-        });
-        
-        input.addEventListener('blur', () => {
-            if (!input.value) {
-                input.parentElement.classList.remove('focused');
-            }
-        });
-    });
-}
-
-// ===== BUTTON ANIMATIONS =====
-function enhanceButtons() {
-    // Add hover effect to all buttons
-    document.querySelectorAll('button, .btn-primary, .btn-secondary, .service-btn, .social-btn').forEach(btn => {
-        btn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        btn.addEventListener('mouseleave', function() {
-            this.style.transform = '';
-        });
-        
-        // Ripple effect
-        btn.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.7);
-                transform: scale(0);
-                animation: ripple 0.6s linear;
-                width: ${size}px;
-                height: ${size}px;
-                top: ${y}px;
-                left: ${x}px;
-                pointer-events: none;
-            `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 600);
-        });
-    });
-}
-
-// ===== INITIALIZE EVERYTHING =====
+// ===== INITIALIZATION =====
 function init() {
-    // Close modals event listeners
+    // Инициализация слушателей
     DOM.closeCalculator?.addEventListener('click', closeCalculator);
     DOM.closeWhatsApp?.addEventListener('click', closeWhatsAppModal);
     DOM.closeInstagram?.addEventListener('click', closeInstagramModal);
     
-    // Initialize features
+    // Инициализация функций
     initSmoothScrolling();
-    initScrollAnimations();
-    enhanceParticles();
-    enhanceServiceCards();
-    enhanceFormInputs();
-    enhanceButtons();
+    animateCounters();
     
-    // Add CSS for ripple effect
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-        
-        .form-group.focused label {
-            color: #00bfff;
-            transform: translateY(-5px);
-        }
-    `;
-    document.head.appendChild(style);
+    // Обработка смены ориентации
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', handleOrientationChange);
     
-    // Initialize calculator
+    // Инициализация высоты viewport для мобильных
+    handleOrientationChange();
+    
+    // Инициализация калькулятора
     if (DOM.areaInput && DOM.roomsInput && DOM.roomTypeSelect) {
         updateCalculator();
     }
+    
+    console.log('✅ Tazalyk Service - Mobile optimized version loaded');
 }
 
-// ===== START EVERYTHING =====
-document.addEventListener('DOMContentLoaded', init);
+// ===== START APP =====
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// ===== GLOBAL FUNCTIONS (для onclick в HTML) =====
+window.openCalculator = openCalculator;
+window.closeCalculator = closeCalculator;
+window.openWhatsAppModal = openWhatsAppModal;
+window.closeWhatsAppModal = closeWhatsAppModal;
+window.openInstagramModal = openInstagramModal;
+window.closeInstagramModal = closeInstagramModal;
+window.sendCalculation = sendCalculation;
