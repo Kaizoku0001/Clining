@@ -75,8 +75,8 @@
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <!-- Логотип TAZALYK CLEANING SERVICES -->
-                <a href="#" class="logo">
+                <!-- Логотип TAZALYK CLEANING SERVICES - теперь кликабельный для мобильного меню -->
+                <button class="logo mobile-menu-logo" id="mobileMenuLogo">
                     <div class="logo-circle">
                         <span class="logo-main">T</span>
                     </div>
@@ -84,9 +84,10 @@
                         <span class="logo-title">TAZALYK</span>
                         <span class="logo-subtitle">CLEANING SERVICES</span>
                     </div>
-                </a>
+                </button>
                 
-                <div class="nav-links">
+                <!-- Навигационные ссылки - ТОЛЬКО для десктопа -->
+                <div class="nav-links desktop-only">
                     <a href="#services" class="nav-link"><i class="fas fa-broom"></i> Услуги</a>
                     <a href="#portfolio" class="nav-link"><i class="fas fa-images"></i> Работы</a>
                     <a href="#process" class="nav-link"><i class="fas fa-cogs"></i> Процесс</a>
@@ -97,11 +98,6 @@
                 <div class="header-actions">
                     <button class="btn-contact" onclick="openCalculator()">
                         <i class="fas fa-calculator"></i> Рассчитать
-                    </button>
-                    <button class="menu-toggle" id="menuToggle">
-                        <span></span>
-                        <span></span>
-                        <span></span>
                     </button>
                 </div>
             </nav>
@@ -211,7 +207,6 @@
                     <ul class="service-features">
                         <li><i class="fas fa-check"></i> Панорамные и витражные окна</li>
                         <li><i class="fas fa-check"></i> Очистка рам и откосов</li>
-                        <li><i class="fas fa-check"></i> Полировка стекол</li>
                     </ul>
                     <button class="service-btn" onclick="openCalculatorWithService(2)">Рассчитать</button>
                 </div>
@@ -643,6 +638,9 @@
             </button>
         </div>
     </div>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
 
     <!-- Modals -->
     <!-- Calculator Modal - Увеличенная версия -->

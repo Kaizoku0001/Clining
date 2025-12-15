@@ -2,9 +2,10 @@
 const DOM = {
     preloader: document.querySelector('.preloader'),
     header: document.querySelector('.header'),
-    menuToggle: document.getElementById('menuToggle'),
-    menuClose: document.getElementById('menuClose'),
+    mobileMenuLogo: document.getElementById('mobileMenuLogo'),
     mobileMenu: document.getElementById('mobileMenu'),
+    menuOverlay: document.getElementById('menuOverlay'),
+    menuClose: document.getElementById('menuClose'),
     scrollTop: document.getElementById('scrollTop'),
     calculatorModal: document.getElementById('calculatorModal'),
     whatsappModal: document.getElementById('whatsappModal'),
@@ -49,40 +50,69 @@ window.addEventListener('load', () => {
     }, 1000);
 });
 
-// ===== MOBILE MENU FUNCTIONS =====
-function toggleMobileMenu() {
-    const isActive = DOM.mobileMenu.classList.contains('active');
-    
-    if (isActive) {
-        closeMobileMenu();
-    } else {
-        openMobileMenu();
+// ===== MOBILE MENU WITH LOGO =====
+// Создаем оверлей для меню если его нет
+if (!DOM.menuOverlay) {
+    const overlay = document.createElement('div');
+    overlay.className = 'menu-overlay';
+    overlay.id = 'menuOverlay';
+    document.body.appendChild(overlay);
+    DOM.menuOverlay = overlay;
+}
+
+// Функция для клика по логотипу
+function handleLogoClick() {
+    if (window.innerWidth < 768) {
+        // Только для мобильных
+        const isActive = DOM.mobileMenu.classList.contains('active');
+        
+        if (isActive) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+        
+        // Анимация клика
+        DOM.mobileMenuLogo?.classList.add('clicked');
+        setTimeout(() => {
+            DOM.mobileMenuLogo?.classList.remove('clicked');
+        }, 300);
     }
 }
 
+// Обновленная функция открытия меню
 function openMobileMenu() {
     DOM.mobileMenu.classList.add('active');
+    if (DOM.menuOverlay) {
+        DOM.menuOverlay.classList.add('active');
+    }
     document.body.style.overflow = 'hidden';
     document.body.classList.add('menu-open');
-    DOM.menuToggle?.classList.add('active');
     
     closeAllModals();
 }
 
+// Обновленная функция закрытия меню
 function closeMobileMenu() {
     DOM.mobileMenu.classList.remove('active');
+    if (DOM.menuOverlay) {
+        DOM.menuOverlay.classList.remove('active');
+    }
     document.body.style.overflow = '';
     document.body.classList.remove('menu-open');
-    DOM.menuToggle?.classList.remove('active');
 }
 
 // Инициализация меню
-if (DOM.menuToggle) {
-    DOM.menuToggle.addEventListener('click', toggleMobileMenu);
+if (DOM.mobileMenuLogo) {
+    DOM.mobileMenuLogo.addEventListener('click', handleLogoClick);
 }
 
 if (DOM.menuClose) {
     DOM.menuClose.addEventListener('click', closeMobileMenu);
+}
+
+if (DOM.menuOverlay) {
+    DOM.menuOverlay.addEventListener('click', closeMobileMenu);
 }
 
 // Закрытие меню при клике на ссылку
@@ -109,16 +139,7 @@ document.querySelectorAll('.mobile-menu-link').forEach(link => {
     });
 });
 
-// Закрытие меню при клике вне его
-document.addEventListener('click', (e) => {
-    if (DOM.mobileMenu?.classList.contains('active') && 
-        !DOM.mobileMenu.contains(e.target) && 
-        !DOM.menuToggle?.contains(e.target)) {
-        closeMobileMenu();
-    }
-});
-
-// Закрытие меню по Escape
+// Закрытие по Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && DOM.mobileMenu?.classList.contains('active')) {
         closeMobileMenu();
@@ -683,6 +704,40 @@ function init() {
     DOM.closeWhatsApp?.addEventListener('click', closeWhatsAppModal);
     DOM.closeInstagram?.addEventListener('click', closeInstagramModal);
     
+    // Инициализация клика по логотипу для мобильного меню
+    if (DOM.mobileMenuLogo) {
+        DOM.mobileMenuLogo.addEventListener('click', handleLogoClick);
+    }
+    
+    // Инициализация оверлея для меню
+    if (DOM.menuOverlay) {
+        DOM.menuOverlay.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Инициализация клика по ссылкам в мобильном меню
+    document.querySelectorAll('.mobile-menu-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            closeMobileMenu();
+            
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                setTimeout(() => {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        const headerHeight = DOM.header?.offsetHeight || 60;
+                        const targetPosition = target.offsetTop - headerHeight;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 300);
+            }
+        });
+    });
+    
     // Инициализация калькулятора
     if (DOM.areaInput && DOM.roomsInput && DOM.roomTypeSelect) {
         initializeCheckboxes();
@@ -738,6 +793,13 @@ function init() {
     // Инициализация высоты viewport
     handleOrientationChange();
     
+    // Закрытие меню по Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && DOM.mobileMenu?.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
+    
     console.log('✅ Tazalyk Cleaning Services загружен успешно');
 }
 
@@ -758,7 +820,7 @@ window.openInstagramModal = openInstagramModal;
 window.closeInstagramModal = closeInstagramModal;
 window.sendCalculation = sendCalculation;
 window.copyCalculation = copyCalculation;
-window.toggleMobileMenu = toggleMobileMenu;
+window.handleLogoClick = handleLogoClick;
 window.changeArea = changeArea;
 window.changeRooms = changeRooms;
 window.changeBathrooms = changeBathrooms;
